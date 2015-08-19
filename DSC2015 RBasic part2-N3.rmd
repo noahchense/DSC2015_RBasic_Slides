@@ -965,8 +965,6 @@ if(小明 < 保護級最低年紀) {
 <br>
 <div style="float:right"><https://zh.wikipedia.org/zh-tw/%E9%97%B0%E5%B9%B4></div>
 
-^^ 由小道大  (先判斷小圈圈))
-︿︿由大道小 （先判斷大圈圈）
 
 ## step1: 年份除以400可整除=閏年
 
@@ -1056,16 +1054,22 @@ if ((year1 %% 4)==0){
 
 # 遊戲時間
 
-## 猜數字
+## 用R玩遊戲
 1. 猜數字的小遊戲
 
 2. 猜幾A幾B的遊戲
 
-3. 讓電腦比賽猜幾A幾B的遊戲 (還在研究中)
+3. 猜幾A幾B的遊戲：和電腦比賽 (還在寫)
 
 4. 圈叉遊戲
 
-5. 五子旗
+5. 圈叉遊戲：只有平手或電腦必勝（還在寫）
+
+6. 河內塔
+ 
+7. 五子旗（還在寫）
+
+8. 撲克21點（還在寫）
 
 <!-- 
 ## case 1: if(), else(), %%, ==
@@ -1096,7 +1100,6 @@ if ( ((!(year1 %% 4)) && (year1 %%100)) || (!(year1 %% 400)) ){
 ```
 -->
 
-︿︿舉例：如果要判斷100個年份
 # 迴圈
 
 ## 迴圈說明
@@ -1215,16 +1218,25 @@ for(年 in 開始年:結束年){ <br><br>
 </font>
 </pre>
 
-## 用之前講的判斷式
+## 先輸入條件
 <pre class='prettyprint lang-r'>
-<font size='3'>
-yearS = 1000 # 或是可以輸入：as.integer(readline("input start year:")) 來自己輸入開始年
-yearE = 2015 # 或是可以輸入：as.integer(readline("input end year:")) 來輸入結束年
-year_cnt=0
+<font size='6'>
+
+yearS = 1000 
+
+# yearS = as.integer(readline("input start year:")) 
+
+yearE = 2015 
+
+# yearE = as.integer(readline("input end year:")) 
+
+year_cnt = 0
 </font>
 </pre>
+
+## 用之前講的閏年練習
 <pre class='prettyprint lang-r'>
-<font size='5'>
+<font size='4'>
 for (n in yearS:yearE){ 
 	if ((year1 %% 4)==0){
 		if ((year1 %% 100)==0){
@@ -1238,6 +1250,8 @@ for (n in yearS:yearE){
 		} else {
 		is_leap_year = FALSE
 	}	
+
+
 	if (is_leap_year == TRUE)
     year_cnt = year_cnt + 1 
   }
@@ -1246,7 +1260,7 @@ paste("總共有：", year_cnt," 個閏年")
 </font>
 </pre>
 
-```{r, results='hold', echo=FALSE, message=TRUE}
+```{r, echo=FALSE, message=TRUE}
 yearS = 1000 # 或是可以輸入：as.integer(readline("input start year:")) 來自己輸入開始年
 yearE = 2015 # 或是可以輸入：as.integer(readline("input end year:")) 來輸入結束年
 year_cnt=0
@@ -1255,7 +1269,7 @@ for (n in yearS:yearE){
     year_cnt = year_cnt + 1
   }
 }
-paste("總共有：", year_cnt," 個閏年")
+print(paste("總共有：", year_cnt," 個閏年"))
 ```
 
 
@@ -1281,6 +1295,7 @@ name1：代表這個函式所帶入的參數，這邊取用name1當作參數的�
 <pre class='prettyprint lang-r'>
 <font size='5'>
 leap_year = function(year1){
+
 	if ((year1 %% 4)==0){
 	  if ((year1 %% 100)==0){
 	    if ((year1 %% 400)==0)
@@ -1309,10 +1324,13 @@ year_cnt=0
 </pre>
 
 <pre class='prettyprint lang-r'>
-<font size='5'>
+<font size='6'>
 for (n in yearS:yearE){
+
   if (leap_year(n)){
+
     year_cnt = year_cnt+1
+
   }
 }
 paste("總共有:", year_cnt," 個閏年")
@@ -1328,7 +1346,7 @@ leap_year = function(year1){
 }
 yearS = 1000 # 或是可以輸入：as.integer(readline("input start year:")) 來自己輸入開始年
 yearE = 2015 # 或是可以輸入：as.integer(readline("input end year:")) 來輸入結束年
-year_cnt=c()
+year_cnt=0
 for (n in yearS:yearE){
   if (leap_year(n)){
     year_cnt = year_cnt+1
@@ -1349,7 +1367,7 @@ paste("總共有:", year_cnt," 個閏年")
 <center><img src="img/engineer0.jpg" height="60%" width="60%"></center>
 每天都在問神奇海螺
 
-## E=(MC)^2
+## E=MC^2
 <center><img src="img/first_low_of_SW.jpg" height="90%" width="90%"></center>
 人都可能被劈腿，手一定有機會出鎚，
 
@@ -1388,7 +1406,7 @@ undebug(now_time)
 ### 用debug來測試前面好的閏年程式：leap_year()
 
 <!--######################################################################################-->
-# Error / Exception Handling：錯誤管理
+# Error / Exception Handling：錯誤/例外管理
 <!--######################################################################################-->
 
 
@@ -1396,59 +1414,91 @@ undebug(now_time)
 輸入範例
 <pre class='prettyprint lang-r'>
 <font size='6'>
-inputs = list(1, 2, 4, -5, 'oops', 0, 10) <br>
+data_in = list(1, 2, 4, -5, "I^love^R", 0, 10) <br>
 
-for(input in inputs) { <br>
+for(input in data_in) { <br>
 
-  print(paste("log of", input, "=", log(input))) <br>
+  print(log(input)) <br>
 }
 </font>
 </pre>
 
-## 輸出結果：Error
+## 結果：Error
 <pre class='prettyprint lang-r'>
 <font size='5'>
-[1] "log of 1 = 0"
-[1] "log of 2 = 0.693147180559945"
-[1] "log of 4 = 1.38629436111989"
-[1] "log of -5 = NaN"
+[1] "0"
+[1] "0.693147180559945"
+[1] "1.38629436111989"
+[1] "NaN"
 </font>
 </pre>
 <pre class='prettyprint lang-r'>
 <font size='6'>
 Error in log(input) : non-numeric argument 
+
 to mathematical function
+
 此外: Warning message:
+
 In log(input) : 產生了 NaNs
 </font>
 </pre>
 
-#### RBlogger的範例：
-<http://www.r-bloggers.com/error-handling-in-r/>
 
 
-## Error Handling: try()
-
+# Error Handling: 使用try()
+## try的用法：
 <pre class='prettyprint lang-r'>
 <font size='6'>
-inputs = list(1, 2, 4, -5, 'oops', 0, 10)
+data_in = list(1, 2, 4, -5, "I^love^R", 0, 10)
 
-for(input in inputs) {
+for(input in data_in) {
 
-  try(print(paste("log of", input, "=", log(input))))
+  try(print(log(input)))
 }
 </font>
 </pre>
 ```{r, echo=FALSE, message=TRUE}
-inputs = list(1, 2, 4, -5, 'oops', 0, 10)
-for(input in inputs) {
-  try(print(paste("log of", input, "=", log(input))))
+data_in = list(1, 2, 4, -5, "I^love^R", 0, 10)
+for(input in data_in) {
+  try(print(log(input)))
 }
 ```
 
+
+# Error Handling: 使用tryCatch()
+## 可分別處理Warning和Error的事件
+先設定發生Error和Warning時的應對方法
+<pre class='prettyprint lang-r'>
+<font size='7'>
+func_error = function(e){<br>
+	print("this is a ERROR!!!")<br>
+}
+</font>
+</pre>
+<pre class='prettyprint lang-r'>
+<font size='7'>
+func_warning = function(w){<br>
+	print("just a wraning")<br>
+}
+</font>
+</pre>
+
+
 ## Error Handling: 使用tryCatch()來顯示錯誤
-```{r, results='hold'}
-data_in = list(1, 2, 4, -5, 'oops', 0, 10)
+<pre class='prettyprint lang-r'>
+<font size='7'>
+for(input in data_in) {<br>
+　 tryCatch(print(log(input)),<br>
+　 warning = func_warning ,   <br>
+　 error = func_error)
+}
+</font>
+</pre>
+
+
+```{r, echo=FALSE, message=TRUE}
+data_in = list(1, 2, 4, -5, "I^love^R", 0, 10)
 
 func_error = function(e){
 	print("this is a ERROR!!!")
@@ -1457,10 +1507,39 @@ func_warning = function(w){
 	print("just a wraning")
 }
 for(input in data_in) {
-  tryCatch(print(paste("log of", input, "=", log(input))),
+  tryCatch(print(log(input)),
   warning = func_warning ,   error = func_error)
 }
 ```
+
+## 結果
+<pre class='prettyprint lang-r'>
+<font size='5'>
+[1] 0
+
+[1] 0.6931472
+
+[1] 1.386294
+</font>
+</pre>
+
+<pre class='prettyprint lang-r'>
+<font size='7'>
+[1] "just a wraning"
+
+[1] "this is a ERROR!!!"
+
+[1] -Inf
+</font>
+<font size='5'>
+[1] 2.302585
+</font>
+</pre>
+
+## 小問題：
+### 可以把發生錯誤的原始內容印出來嗎？
+當然可以，but
+
 
 <!--######################################################################################-->
 # 小天使複習班：
